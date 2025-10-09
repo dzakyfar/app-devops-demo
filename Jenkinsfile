@@ -2,8 +2,10 @@ pipeline {
     agent any
     stages {
         stage('Checkout') {
-            steps { git 'https://github.com/dzakyfar/app-devops-demo.git' }
-        }
+    steps {
+        git branch: 'main', url: 'https://github.com/dzakyfar/app-devops-demo.git'
+    }
+}
         stage('Build') {
             steps { sh 'mvn clean package -DskipTests' }
         }

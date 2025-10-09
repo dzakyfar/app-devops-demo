@@ -1,25 +1,14 @@
-pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/dzakyfar/app-devops-demo.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t dzakyfar/app-devops-demo .'
-            }
-        }
-        stage('Docker Run') {
-            steps {
-                sh 'docker run -d -p 8081:8080 dzakyfar/app-devops-demo'
-            }
-        }
-    }
-}
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Install Maven, Docker CLI, git, curl
+RUN apt-get update && apt-get install -y \
+    maven \
+    docker.io \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch back to jenkins user
+USER jenkins
